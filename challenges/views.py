@@ -1,36 +1,37 @@
 # from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 
 # Create your views here.
 
-months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november",
-          "december"]
-
-goals = [
-    "Wake up at 5 every morning",
-    "Run 5kms every day at a moderate consistent pace",
-    "Do 20 push ups everyday",
-    "Learn django for 3 hours everyday",
-    "Reduce alcohol intake",
-    "Read books for at least 30 minutes a day",
-    "Drink more water 4-5 liters a day",
-    "Have some more fun",
-    "Try to learn french language",
-    "Reduce screen time by 1 hour",
-    "Spend more time with family",
-    "Meditate for 20 minutes daily"
-]
+goals = {
+    "january": "Wake up at 5 every morning",
+    "february": "Run 5kms every day at a moderate consistent pace",
+    "march": "Do 20 push ups everyday",
+    "april": "Learn django for 3 hours everyday",
+    "may": "Reduce alcohol intake",
+    "june": "Read books for at least 30 minutes a day",
+    "july": "Drink more water 4-5 liters a day",
+    "august": "Have some more fun",
+    "september": "Try to learn french language",
+    "october": "Reduce screen time by 1 hour",
+    "november": "Spend more time with family",
+    "december": "Meditate for 20 minutes daily"
+}
 
 
 def handle_monthly_num_challenge(request, month):
     if 0 < month <= 12:
-        return HttpResponse(handle_monthly_challenge(request, months[month-1]))
+        curr_month = list(goals.keys())[month-1]
+        redirect_path = reverse('month-challenge', args=[curr_month])  # challenges/curr_month
+        return HttpResponseRedirect(redirect_path)
     else:
-        return HttpResponse(handle_monthly_challenge(request, "none"))
+        return HttpResponseNotFound("This month is not supported")
 
 
 def handle_monthly_challenge(request, month):
-    for idx, current_month in enumerate(months):
-        if current_month == month:
-            return HttpResponse(goals[idx])
-    return HttpResponse("This url is not supported")
+    try:
+        habit = goals[month]
+        return HttpResponse(habit)
+    except HttpResponseNotFound:
+        return HttpResponseNotFound("This month is not supported")
