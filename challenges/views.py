@@ -1,4 +1,4 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from django.http import HttpResponse
 
 # Create your views here.
@@ -9,10 +9,10 @@ months = ["january", "february", "march", "april", "may", "june", "july", "augus
 goals = [
     "Wake up at 5 every morning",
     "Run 5kms every day at a moderate consistent pace",
-    "Do 20 pushups everyday",
+    "Do 20 push ups everyday",
     "Learn django for 3 hours everyday",
     "Reduce alcohol intake",
-    "Read books for at least 30 mins a day",
+    "Read books for at least 30 minutes a day",
     "Drink more water 4-5 liters a day",
     "Have some more fun",
     "Try to learn french language",
@@ -20,6 +20,13 @@ goals = [
     "Spend more time with family",
     "Meditate for 20 minutes daily"
 ]
+
+
+def handle_monthly_num_challenge(request, month):
+    if 0 < month <= 12:
+        return HttpResponse(handle_monthly_challenge(request, months[month-1]))
+    else:
+        return HttpResponse(handle_monthly_challenge(request, "none"))
 
 
 def handle_monthly_challenge(request, month):
